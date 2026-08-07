@@ -43,7 +43,8 @@ const PASSTHROUGH = [
    ========================================================= */
 const LEAD_MODE   = "site";        // "site" (Modelo B) | "painel" (Modelo A)
 const PHONE_MODE  = "celular_br";  // "celular_br" | "celular_ou_fixo_br" | "internacional"
-const REDIRECT_DELAY_MS = 1200;    // §7.6 — abaixo de ~1s começa a perder eventos
+const REDIRECT_DELAY_MS = 1500;    // §7.6 — alinhado ao debounce de 1500ms da PixelX.
+                                   // Abaixo disso a navegação cancela a requisição do Lead.
 const PIXEL_TIMEOUT_MS  = 3000;    // §8.5 — espera o pixel_x_app ficar pronto
 
 /* --- Elementos --- */
@@ -285,7 +286,20 @@ window.trackLead = trackLead;
    ========================================================= */
 const BTN_LABEL = `Ir para o pagamento<span class="cta__sub">Pix, cartão ou boleto</span>`;
 
+/* Guarda de idempotência no NÍVEL DO ENVIO, não só do Lead.
+   O trackLead() já era guardado, mas enviarLead() não: cada submit extra
+   empurrava outro "iniciar_checkout" no dataLayer, gravava outra linha na
+   planilha e agendava outro redirect. Se houver tag de conversão em
+   iniciar_checkout, isso vira Lead duplicado/triplicado. */
+let envioEmAndamento = false;
+
 async function enviarLead() {
+  if (envioEmAndamento) {
+    console.warn("[Form] Envio já em andamento; ignorando.");
+    return;
+  }
+  envioEmAndamento = true;
+
   const btn = form.querySelector("button[type='submit']");
 
   if (btn) {
@@ -309,8 +323,11 @@ async function enviarLead() {
 
     track("iniciar_checkout", { valor: 59.9, moeda: "BRL", produto: "resumo_bizurado_pmpe" });
 
-    // 2. Planilha. Falha aqui não pode bloquear a venda.
-    await fetch(SHEET_URL, {
+    // 2. Planilha em fire-and-forget. Com mode:"no-cors" não dá para ler a
+    //    resposta, então esperar não garante nada — e um Apps Script lento
+    //    travaria o comprador numa tela de "ABRINDO CHECKOUT..." sem nunca
+    //    chegar ao pagamento.
+    fetch(SHEET_URL, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -321,6 +338,8 @@ async function enviarLead() {
         pagina: window.location.href,
         data_envio: new Date().toISOString()
       }))
+    }).catch((err) => {
+      console.error("[Form] Falha ao salvar na planilha (segue o checkout):", err);
     });
   } catch (err) {
     console.error("[Form] Falha ao registrar o lead:", err);
@@ -345,6 +364,7 @@ async function enviarLead() {
     if (btn && btn.disabled) {
       btn.disabled = false;
       btn.innerHTML = BTN_LABEL;
+      envioEmAndamento = false;   // o redirect falhou: permite tentar de novo
     }
   }, REDIRECT_DELAY_MS + 6000);
 }
