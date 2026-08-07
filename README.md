@@ -75,14 +75,32 @@ Falha no envio à planilha **não** bloqueia o redirecionamento — a venda vem 
 
 ## Publicar
 
-```bash
-git init && git add . && git commit -m "LP Resumo Bizurado PMPE"
-git branch -M main
-git remote add origin https://github.com/SEU_USUARIO/apostila-pmpe.git
-git push -u origin main
-```
+Repositório: <https://github.com/marketing942/ApostilaPMPE> (branch `main`).
 
-No Vercel: Add New → Project → importe o repo → Framework Preset **Other** → Deploy.
+**Vercel** — Add New → Project → importe `marketing942/ApostilaPMPE` →
+Framework Preset **Other** → Root Directory `./` → Deploy. Não há build: o
+`vercel.json` só liga `cleanUrls` e o cache longo de `public/`. Depois do
+import, todo `git push` na `main` publica sozinho.
+
+**Domínio** `apostila.cppem.com.br`:
+
+1. No projeto do Vercel: Settings → Domains → Add → `apostila.cppem.com.br`.
+   O Vercel mostra o alvo do CNAME — **use o valor exato que ele exibir**
+   (historicamente `cname.vercel-dns.com`, mas projetos novos recebem um alvo
+   próprio, do tipo `xxxx.vercel-dns-0nn.com`).
+2. No Cloudflare, zona `cppem.com.br` → DNS → Add record:
+
+   | Type | Name | Target | Proxy | TTL |
+   |---|---|---|---|---|
+   | CNAME | `apostila` | *(o alvo que o Vercel mostrou)* | **DNS only** | Auto |
+
+> ⚠️ **A nuvem tem que ficar cinza (DNS only).** Com o proxy ligado, o Vercel
+> não consegue validar o domínio nem emitir o certificado, e a combinação
+> "Cloudflare Flexible + HTTPS do Vercel" gera loop de redirecionamento. O
+> Vercel já é CDN — não há o que ganhar proxiando.
+
+Propagação leva de minutos a ~1h. O certificado é emitido pelo Vercel sozinho
+assim que o CNAME resolve.
 
 ## Exit popup
 
