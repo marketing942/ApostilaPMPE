@@ -1,4 +1,4 @@
-﻿# Resumo Bizurado Digital — PMPE
+# Resumo Bizurado Digital — PMPE
 
 Página de venda de disparo rápido. Herda paleta, tipografia e assets da landing
 `C:\Projetos\pmpe`.
