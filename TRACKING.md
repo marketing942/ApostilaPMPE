@@ -1518,41 +1518,54 @@ Esta é uma landing de **venda direta** (Resumo Bizurado, R$ 59,90) — o formul
 não gera contato comercial, gera **checkout**. Isso muda o risco: um erro aqui
 não atrapalha só a métrica, atrapalha a compra.
 
-### A causa da tripicação de Lead
+### A causa da tripicação: 3 eventos, não 3 Leads
 
-Encontrada medindo, não deduzindo. Um teste enviou o formulário três vezes e
-contou tudo que saiu:
+O `send_event` sempre disparou **uma vez só** — isso foi medido. O problema é
+que um único `send_event` não produz um evento no `dataLayer`, produz **dois**,
+e esta página acrescentava um terceiro:
+
+| # | Evento no `dataLayer` | Quem emite |
+|---|---|---|
+| 1 | `generate_lead` | PixelX, a partir do `send_event` |
+| 2 | `conversion` | PixelX, mesmo `send_event` — é o que carrega o `send_to` do Google Ads |
+| 3 | `iniciar_checkout` | **push próprio desta página** |
+
+Com tags de Meta e de Google Ads apontadas para os três, uma venda virava
+**3 Meta + 3 Google Ads**.
+
+A landing **PMPE não empurra nada** no envio do formulário — só o exit popup
+emite eventos (`exit_popup_*`, que nunca podem ser mapeados como Lead). Foi
+essa a diferença, e não o markup: form id, id do botão, ids e `name` dos campos,
+`pxa_mask_phone` e chaves de `data-error-for` **já eram idênticos** aos da PMPE.
+
+**Correção:** removidos os pushes `iniciar_checkout` e `abrir_formulario`.
+Depois disso o `dataLayer` da página fica com `[gtm.dom]` e mais nada — mesmo
+comportamento da PMPE.
+
+> A função `track()` continua no arquivo, sem nenhuma chamada, com um comentário
+> avisando: se voltar a usá-la para funil, confirme antes que o nome do evento
+> **não** está ligado a nenhuma tag de conversão no GTM.
+
+### Um defeito anterior, também corrigido
+
+Antes disso, uma primeira rodada de auditoria já tinha achado outra duplicação:
+o `trackLead()` era guardado, mas o `enviarLead()` **não**. Cada submit extra
+empurrava outro `iniciar_checkout`, gravava outra linha na planilha e agendava
+outro redirect.
 
 ```text
-send_event : 1  ✅ (o trackLead() já era guardado)
-dataLayer  : [iniciar_checkout, gtm.dom, gtm.load, iniciar_checkout, iniciar_checkout]
-                                                    ^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^
+antes : [iniciar_checkout, gtm.dom, gtm.load, iniciar_checkout, iniciar_checkout]
+agora : [gtm.dom]
 ```
 
-O `trackLead()` tinha guarda de idempotência, mas **`enviarLead()` não tinha**.
-Cada submit extra:
-
-- empurrava outro `iniciar_checkout` no `dataLayer`
-- gravava outra linha na planilha
-- agendava outro redirect para o checkout
-
-`iniciar_checkout` é o **único evento custom** que esta página emite. Se houver
-tag de conversão apontada para ele no GTM — e é o candidato natural —, um envio
-repetido vira Lead duplicado ou triplicado, mesmo com o `send_event` correto.
-
-> Como um usuário real chega a enviar 2–3 vezes: o botão é desabilitado no
-> primeiro envio, mas volta a ficar ativo 7,5s depois (rede de segurança para o
-> caso do redirect falhar). Nesse intervalo, e em `Enter` repetido antes do
-> `disabled` aplicar, o envio roda de novo.
-
-**Correção:** guarda `envioEmAndamento` no nível do envio, liberada apenas se o
-redirect falhar.
+Corrigido com a guarda `envioEmAndamento`, liberada apenas se o redirect falhar.
 
 ### O que mais foi corrigido
 
 | Defeito | Seção | Correção |
 |---|---|---|
-| `enviarLead()` sem guarda → `iniciar_checkout`, linha na planilha e redirect duplicados | [§9](#9-template-portável) | Guarda `envioEmAndamento` |
+| Pushes próprios (`iniciar_checkout`, `abrir_formulario`) somando com os 2 eventos da PixelX | [§4](#4-inventário-dos-5-emissores-de-lead) | Removidos — paridade com a PMPE |
+| `enviarLead()` sem guarda → evento, linha na planilha e redirect duplicados | [§9](#9-template-portável) | Guarda `envioEmAndamento` |
 | `REDIRECT_DELAY_MS = 1200`, **abaixo** do debounce de 1500ms da PixelX — a navegação podia cancelar a requisição do Lead | [§7.6](#76-formreset-e-redirecionamento-cedo-demais) | 1500ms |
 | `await fetch(SHEET_URL)` bloqueava o caminho: Apps Script lento travava o comprador em "ABRINDO CHECKOUT..." **sem chegar ao pagamento** | [§7.6](#76-formreset-e-redirecionamento-cedo-demais) | Fire-and-forget com `.catch` |
 
@@ -1609,11 +1622,14 @@ e espiões simulando regras de painel no `<form>` e no `<button>`:
 
 ### Ação necessária no GTM
 
-1. Confira se existe tag de conversão disparando em **`iniciar_checkout`**. Esse
-   evento agora sai uma única vez, mas se ele estiver mapeado como Lead **e** o
-   `generate_lead` da PixelX também, você conta dois por venda.
-2. Confira regra de **clique** no painel para `IPEyzyfmJhKQEYIXAlZH`.
-3. Teste de [§10.6](#106-contagem-ponta-a-ponta) em aba anônima: 1 envio = 1 Lead.
+1. A página **não emite mais** `iniciar_checkout` nem `abrir_formulario`. Se
+   houver tags de Meta/Ads apontadas para esses nomes, elas ficaram órfãs —
+   remova-as do container para não acumular lixo.
+2. Confirme que Meta e Google Ads disparam em **apenas um** dos dois eventos da
+   PixelX. `generate_lead` e `conversion` saem juntos do mesmo `send_event`:
+   se as duas tags escutarem os dois, você conta **2 por venda**.
+3. Confira regra de **clique** no painel para `IPEyzyfmJhKQEYIXAlZH`.
+4. Teste de [§10.6](#106-contagem-ponta-a-ponta) em aba anônima: 1 envio = 1 Lead.
 
 ### Arquivos
 

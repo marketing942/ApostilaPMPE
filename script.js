@@ -59,6 +59,11 @@ const Store = {
   set(k, v) { try { localStorage.setItem(k, v); }    catch (e) {} }
 };
 
+/* Deliberadamente SEM chamadas no fluxo de conversão — ver enviarLead().
+   Só o exit-popup.js emite eventos próprios (exit_popup_*), e esses nunca
+   podem ser mapeados como Lead no GTM. Se um dia voltar a usar esta função
+   para funil, confirme antes que o nome do evento NÃO está ligado a nenhuma
+   tag de conversão. */
 function track(event, data) {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push(Object.assign({ event: event }, data || {}));
@@ -321,7 +326,11 @@ async function enviarLead() {
     // 1. Lead primeiro — depois do redirecionamento a página morre (§7.6).
     await trackLead(dados);
 
-    track("iniciar_checkout", { valor: 59.9, moeda: "BRL", produto: "resumo_bizurado_pmpe" });
+    /* NÃO empurrar evento próprio aqui. Um único send_event já gera DOIS
+       eventos no dataLayer pela PixelX — "generate_lead" e "conversion"
+       (este último com send_to do Google Ads). Um terceiro evento nosso, com
+       tags de Meta e Ads apontadas para ele, virava 3 conversões por venda.
+       A landing PMPE não empurra nada no envio, e é o padrão aqui também. */
 
     // 2. Planilha em fire-and-forget. Com mode:"no-cors" não dá para ler a
     //    resposta, então esperar não garante nada — e um Apps Script lento
@@ -415,7 +424,7 @@ const Modal = {
     el.hidden = false;
     document.body.style.overflow = "hidden";
 
-    track("abrir_formulario", { cta: origem || "desconhecido" });
+    /* Idem: nenhum evento custom. Ver comentário em enviarLead(). */
 
     const first = el.querySelector("input");
     if (first) setTimeout(() => first.focus(), 60);
