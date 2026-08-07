@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    CPPEM × PMPE — Resumo Bizurado Digital
    hero > matérias > dores > mentor > comparativo > alunos
    > oferta > FAQ > rodapé
@@ -38,7 +38,7 @@ img{display:block;max-width:100%}
 input,button,textarea,select{font-family:inherit;font-size:1rem}
 
 /* fundo */
-.bg{position:fixed;inset:0;z-index:-2;background:url("public/tropa-pmpe.jpeg") center 22%/cover no-repeat}
+.bg{position:fixed;inset:0;z-index:-2;background:url("assets/tropa-pmpe.jpeg") center 22%/cover no-repeat}
 .bg-scrim{position:fixed;inset:0;z-index:-1;
   background:
     radial-gradient(120% 55% at 50% 0%,rgba(200,16,46,.28),transparent 55%),

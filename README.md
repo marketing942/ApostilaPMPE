@@ -1,4 +1,4 @@
-# Resumo Bizurado Digital — PMPE
+﻿# Resumo Bizurado Digital — PMPE
 
 Página de venda de disparo rápido. Herda paleta, tipografia e assets da landing
 `C:\Projetos\pmpe`.
@@ -14,7 +14,7 @@ apostila/
 ├── exit-popup.css     ← kit portátil, copiado de pmpe/exit-popup-kit/
 ├── exit-popup.js      ← só o bloco CONFIG foi alterado
 ├── vercel.json
-└── public/            ← apostila.webp, logos, foto do professor, alunos
+└── assets/            ← apostila.webp, logos, foto do professor, alunos
 ```
 
 `exit-popup.css` é carregado **antes** de `styles.css`: os ajustes de mobile
@@ -22,7 +22,7 @@ apostila/
 
 ## Assets
 
-Todos em `public/`, reduzidos para o tamanho em que a página realmente os exibe —
+Todos em `assets/`, reduzidos para o tamanho em que a página realmente os exibe —
 a pasta inteira tem ~600 KB. As fotos dos alunos vieram das originais da landing PMPE
 (até 2 MB cada) recortadas em 4:5 a 400×500. Ao trocar qualquer imagem, reduza antes:
 uma foto de 1 MB numa página de venda custa conversão no 4G.
@@ -79,7 +79,7 @@ Repositório: <https://github.com/marketing942/ApostilaPMPE> (branch `main`).
 
 **Vercel** — Add New → Project → importe `marketing942/ApostilaPMPE` →
 Framework Preset **Other** → Root Directory `./` → Deploy. Não há build: o
-`vercel.json` só liga `cleanUrls` e o cache longo de `public/`. Depois do
+`vercel.json` só liga `cleanUrls` e o cache longo de `assets/`. Depois do
 import, todo `git push` na `main` publica sozinho.
 
 **Domínio** `apostila.cppem.com.br`:
