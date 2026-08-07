@@ -1,0 +1,10 @@
+node_modules/
+.vercel/
+.DS_Store
+Thumbs.db
+
+# andaimes de verificação (headless screenshots / testes de layout)
+_diag.html
+_frame.html
+_test.js
+_diag.js

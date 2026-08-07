@@ -1,0 +1,442 @@
+/* =========================================================
+   CPPEM × PMPE — Resumo Bizurado Digital
+   hero > matérias > dores > mentor > comparativo > alunos
+   > oferta > FAQ > rodapé
+   Paleta e tipografia herdadas da landing PMPE.
+   ========================================================= */
+
+:root{
+  --red:#C8102E; --red-dark:#8E0B20; --red-bright:#E11733; --red-soft:rgba(225,23,51,.14);
+  --green:#16C34A; --green-dark:#0E9E39;
+  --blue:#0B2A6B; --blue-deep:#061A44;
+  --white:#F5F5F5; --ink:#0A0E1A;
+  --panel:rgba(10,16,32,.80); --panel-2:rgba(14,20,38,.72);
+  --line:rgba(255,255,255,.10); --muted:#B9C0D0;
+
+  /* Calha lateral única. No mobile vira 1rem = 16px exatos, e todo bloco
+     de largura total usa esta variável — assim as bordas de todas as
+     seções, do rodapé e dos modais alinham na mesma linha vertical. */
+  --gutter:1.3rem;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* Base 16px explícita: todo o rem da página parte daqui, e a calha do mobile
+   (--gutter) é exatamente 1rem. O -webkit-text-size-adjust trava o "inflar
+   fonte" do Safari/Chrome mobile, que estoura layouts em landscape. */
+html{scroll-behavior:smooth;font-size:16px;
+  -webkit-text-size-adjust:100%;text-size-adjust:100%}
+
+body{overflow-x:hidden;background:var(--ink);color:var(--white);
+  font-family:"Montserrat",system-ui,sans-serif;font-size:1rem;line-height:1.6;
+  -webkit-font-smoothing:antialiased;min-height:100vh;padding-top:2.6rem}
+img{display:block;max-width:100%}
+
+/* iOS dá zoom automático em qualquer campo com fonte abaixo de 16px, e o
+   zoom não volta sozinho — a página fica torta no meio do formulário.
+   16px é o piso, não uma preferência estética. */
+input,button,textarea,select{font-family:inherit;font-size:1rem}
+
+/* fundo */
+.bg{position:fixed;inset:0;z-index:-2;background:url("public/tropa-pmpe.jpeg") center 22%/cover no-repeat}
+.bg-scrim{position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(120% 55% at 50% 0%,rgba(200,16,46,.28),transparent 55%),
+    linear-gradient(180deg,rgba(6,16,40,.84),rgba(10,14,26,.94) 45%,rgba(10,14,26,.99))}
+
+/* ===================== TOPBAR ===================== */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:center;gap:.55rem;
+  background:linear-gradient(90deg,var(--red-dark),var(--red-bright),var(--red-dark));
+  color:#fff;font-weight:800;font-size:.76rem;letter-spacing:.09em;
+  text-transform:uppercase;text-align:center;
+  padding:.6rem 1rem;box-shadow:0 4px 16px rgba(0,0,0,.45)}
+.topbar__dot{width:9px;height:9px;border-radius:50%;background:#fff;flex:0 0 auto;
+  box-shadow:0 0 0 0 rgba(255,255,255,.7);animation:pulse 1.4s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}
+  70%{box-shadow:0 0 0 8px rgba(255,255,255,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+
+/* ===================== CONTAINER ===================== */
+.page{max-width:1080px;margin:0 auto;padding:2.6rem var(--gutter) 0;
+  display:flex;flex-direction:column;align-items:center}
+
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;
+  font-weight:800;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--red-bright);background:var(--red-soft);
+  border:1px solid rgba(225,23,51,.4);
+  padding:.42rem .95rem;border-radius:999px;margin-bottom:1.1rem}
+.eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--red-bright)}
+
+.section-title{font-family:"Bebas Neue",sans-serif;font-weight:400;text-transform:uppercase;
+  font-size:clamp(1.9rem,5.6vw,3rem);line-height:1;letter-spacing:.01em;margin-bottom:1rem}
+.section-title .hl{color:var(--red-bright)}
+.section-lead{color:var(--muted);font-size:1rem;max-width:40rem;margin-bottom:2.2rem}
+.section-lead strong{color:var(--white)}
+
+/* blocos de seção — margem única, sem brigar entre si */
+.dores,.mentor,.comparativo,.social,.oferta{width:100%;margin-bottom:4.2rem}
+.dores,.comparativo,.social,.oferta{display:flex;flex-direction:column;
+  align-items:center;text-align:center}
+
+/* ===================== BOTÃO COM LUZ PASSANDO ===================== */
+.cta{position:relative;overflow:hidden;isolation:isolate;
+  width:100%;max-width:440px;display:block;
+  font-family:"Montserrat",sans-serif;font-weight:800;letter-spacing:.03em;text-transform:uppercase;
+  cursor:pointer;border:none;border-radius:12px;padding:1.15rem 1.4rem;font-size:1rem;
+  color:#fff;background:linear-gradient(180deg,var(--green),var(--green-dark));
+  box-shadow:0 12px 34px rgba(14,158,57,.42);
+  transition:transform .15s,box-shadow .2s,filter .2s}
+.cta:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(14,158,57,.6);filter:brightness(1.07)}
+.cta:active{transform:translateY(0)}
+.cta:focus-visible{outline:3px solid var(--red-bright);outline-offset:3px}
+.cta:disabled{opacity:.7;cursor:not-allowed;transform:none}
+
+/* A luz: faixa branca inclinada que atravessa o botão.
+   Quem anda é o transform, não o `left` — mesma escolha do .logo-shine da
+   mentoria-individual. Animar `left` recalcula layout a cada frame, e são
+   4 botões varrendo ao mesmo tempo em celular. Com transform a animação
+   vai para o compositor e não toca no layout. */
+.cta::after{content:"";position:absolute;top:-60%;left:0;z-index:-1;
+  width:45%;height:220%;
+  background:linear-gradient(90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.10) 35%,
+    rgba(255,255,255,.55) 50%,
+    rgba(255,255,255,.10) 65%,
+    rgba(255,255,255,0) 100%);
+  transform:translateX(-160%) skewX(-16deg);
+  animation:shine 3.4s ease-in-out infinite}
+
+/* A varredura ocupa os últimos 28% do ciclo (~1s); o resto é a pausa que faz
+   a próxima passada ser notada. Os dois extremos ficam fora do botão, então
+   o salto do fim para o começo do loop é invisível. */
+@keyframes shine{
+  0%,72%{transform:translateX(-160%) skewX(-16deg)}
+  100%{transform:translateX(280%) skewX(-16deg)}}
+
+.cta__sub{display:block;margin-top:.28rem;
+  font-size:.72rem;font-weight:600;letter-spacing:.06em;
+  text-transform:none;color:rgba(255,255,255,.9)}
+
+.cta--center{margin-left:auto;margin-right:auto}
+.cta--wide{max-width:520px}
+
+/* ===================== HERO ===================== */
+/* Três blocos, para o produto poder subir entre a manchete e a oferta
+   quando a tela estreita. Com dois blocos, ou o preço vinha antes da
+   imagem no mobile, ou a marca ficava embaixo dela. */
+.hero{width:100%;display:grid;gap:1.6rem 2.4rem;
+  grid-template-columns:1fr 1.12fr;
+  grid-template-areas:
+    "intro   product"
+    "offer   product";
+  align-items:center;padding:.8rem 0 3.2rem}
+.hero__intro{grid-area:intro;align-self:end}
+.hero__product{grid-area:product}
+.hero__offer{grid-area:offer;align-self:start}
+
+.brands{display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem}
+.brands__pmpe{height:70px;width:auto;filter:drop-shadow(0 8px 22px rgba(0,0,0,.55))}
+.brands__cppem{height:40px;width:auto}
+.brands__divider{width:1px;height:46px;background:var(--line)}
+
+.headline{font-family:"Bebas Neue",sans-serif;font-weight:400;text-transform:uppercase;
+  font-size:clamp(2.4rem,6.6vw,4rem);line-height:.95;letter-spacing:.01em;margin-bottom:1rem}
+.headline .hl{color:var(--red-bright)}
+.hero__sub{color:var(--muted);font-size:1.02rem;margin-bottom:0;max-width:32rem}
+.hero__sub strong{color:var(--white);font-weight:700}
+
+.hero__bullets{list-style:none;display:flex;flex-direction:column;gap:.42rem;
+  margin-bottom:1.2rem;text-align:left}
+.hero__bullets li{display:flex;align-items:flex-start;gap:.6rem;font-size:.94rem;color:var(--white)}
+.hero__bullets li::before{content:"✓";color:var(--green);font-weight:800;flex:0 0 auto}
+
+.hero__trust{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.trust{display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.72rem;font-weight:700;letter-spacing:.04em;color:var(--muted);
+  background:var(--panel-2);border:1px solid var(--line);
+  padding:.4rem .7rem;border-radius:8px}
+.trust svg{width:14px;height:14px;fill:none;stroke:var(--green);stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+
+/* produto */
+.hero__product{position:relative;display:flex;flex-direction:column;align-items:center;
+  padding:1rem 0}
+.hero__glow{position:absolute;inset:-8% -4% 6%;z-index:0;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(225,23,51,.42),transparent 72%);
+  filter:blur(28px);animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+.hero__mock{position:relative;z-index:1;width:100%;max-width:520px;border-radius:20px;
+  border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.7);
+  animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero__seal{position:relative;z-index:2;margin-top:-1.1rem;
+  display:inline-flex;align-items:center;gap:.45rem;
+  background:linear-gradient(180deg,var(--red),var(--red-dark));
+  color:#fff;font-weight:800;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.5rem .9rem;border-radius:999px;box-shadow:0 10px 26px rgba(200,16,46,.5)}
+
+/* ===================== CAIXA DE PREÇO ===================== */
+.price{width:100%;max-width:440px;text-align:left;
+  background:linear-gradient(180deg,rgba(200,16,46,.16),rgba(10,16,32,.78));
+  border:1px solid rgba(225,23,51,.38);border-radius:16px;
+  padding:1.1rem 1.3rem;margin-bottom:.9rem}
+.price__tag{display:block;font-weight:800;font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--red-bright);margin-bottom:.5rem}
+.price__row{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.price__old{color:var(--muted);font-size:.92rem;text-decoration:line-through}
+.price__now{font-family:"Bebas Neue",sans-serif;font-size:3.2rem;line-height:.9;color:#fff}
+.price__now span{font-size:1.5rem;vertical-align:.35em;margin-right:.1em}
+.price__parcel{margin-top:.5rem;font-size:.95rem;color:var(--white);font-weight:600}
+.price__parcel strong{color:var(--green);font-weight:800}
+.price__note{margin-top:.35rem;font-size:.74rem;color:var(--muted)}
+.price--center{margin-left:auto;margin-right:auto;text-align:center}
+.price--center .price__row{justify-content:center}
+
+/* ===================== FAIXA DE URGÊNCIA ===================== */
+.strip{width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
+  margin-bottom:3.4rem;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+  background:linear-gradient(90deg,var(--red-dark),var(--red),var(--red-dark));
+  color:#fff;font-weight:800;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;
+  text-align:center;padding:.85rem 1.2rem;box-shadow:0 8px 24px rgba(200,16,46,.4)}
+
+/* ===================== DORES ===================== */
+.dores__grid{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:1rem;text-align:left}
+.dor{display:flex;gap:.9rem;align-items:flex-start;
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.3rem 1.25rem}
+.dor__mark{flex:0 0 auto;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  font-size:.82rem;font-weight:800;background:rgba(255,91,91,.14);color:#ff8a8a}
+.dor h3{font-size:.97rem;margin-bottom:.3rem}
+.dor p{color:var(--muted);font-size:.86rem}
+
+/* ===================== MENTOR ===================== */
+.mentor{display:grid;grid-template-columns:.85fr 1.15fr;gap:2.2rem;align-items:center;text-align:left}
+.mentor__photo{position:relative;border-radius:18px;overflow:hidden;
+  border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.6);background:var(--panel)}
+.mentor__photo img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/5}
+.mentor__tag{position:absolute;left:1rem;right:1rem;bottom:1rem;
+  display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(200,16,46,.94),rgba(142,11,32,.94));
+  border-radius:12px;padding:.7rem .95rem;font-size:.7rem;letter-spacing:.06em;color:#fff}
+.mentor__tag strong{font-size:.92rem;letter-spacing:.04em;text-transform:uppercase}
+.mentor__content p{color:var(--muted);margin-bottom:1rem}
+.mentor__content p strong{color:var(--white)}
+.mentor__path{list-style:none;display:flex;flex-wrap:wrap;gap:.45rem;margin:.2rem 0 1.2rem}
+.mentor__path li{font-size:.74rem;font-weight:700;letter-spacing:.03em;color:var(--muted);
+  background:var(--panel-2);border:1px solid var(--line);padding:.32rem .65rem;border-radius:7px}
+.stats{display:flex;gap:1.6rem;flex-wrap:wrap;margin-top:1.4rem}
+.stat{display:flex;flex-direction:column}
+.stat__num{font-family:"Bebas Neue",sans-serif;font-size:2.5rem;line-height:1;color:var(--red-bright)}
+.stat__label{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* ===================== COMPARATIVO ===================== */
+.compare-wrap{width:100%}
+.compare{width:100%;overflow-x:auto;border-radius:16px;border:1px solid var(--line);
+  background:var(--panel);-webkit-overflow-scrolling:touch}
+.compare table{width:100%;min-width:620px;border-collapse:collapse;text-align:left}
+.compare th,.compare td{padding:.95rem 1.1rem;vertical-align:middle;
+  border-bottom:1px solid var(--line);font-size:.9rem}
+.compare thead th{font-family:"Bebas Neue",sans-serif;font-weight:400;letter-spacing:.08em;
+  text-transform:uppercase;font-size:1rem;color:var(--muted);background:var(--panel-2)}
+.compare thead th.col-cppem{color:#fff;background:linear-gradient(135deg,var(--red-dark),var(--red-bright))}
+.compare tbody tr:last-child td{border-bottom:none}
+.compare td.feature{font-weight:700;color:var(--white)}
+.compare td.col-cppem{background:rgba(225,23,51,.07);color:var(--white);font-weight:600}
+.compare td.col-alt{color:var(--muted)}
+.mark{display:inline-flex;align-items:center;gap:.5rem}
+.mark .ico{width:21px;height:21px;border-radius:50%;display:grid;place-items:center;
+  font-size:.74rem;font-weight:800;flex-shrink:0}
+.mark.yes{color:#8ee6a8}
+.mark.yes .ico{background:rgba(22,195,74,.16);color:#8ee6a8}
+.mark.no{color:#ff8a8a}
+.mark.no .ico{background:rgba(255,91,91,.14);color:#ff8a8a}
+.compare-hint{display:none}
+
+/* ===================== ALUNOS ===================== */
+.social__eyebrow{display:block;font-family:"Bebas Neue",sans-serif;font-size:1.5rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--red-bright);margin-bottom:1.2rem}
+.carousel{position:relative;width:100%;overflow:hidden;margin-top:.4rem;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.carousel__track{display:flex;gap:1rem;width:max-content;list-style:none;
+  will-change:transform;animation:carousel-scroll 45s linear infinite}
+.carousel:hover .carousel__track,
+.carousel:focus-within .carousel__track{animation-play-state:paused}
+.carousel__item{flex:0 0 auto;width:clamp(150px,42vw,190px);aspect-ratio:4/5;
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  box-shadow:0 18px 40px rgba(0,0,0,.5)}
+.carousel__item img{width:100%;height:100%;object-fit:cover}
+@keyframes carousel-scroll{from{transform:translate3d(0,0,0)}to{transform:translate3d(calc(-50% - .5rem),0,0)}}
+
+/* ===================== OFERTA FINAL ===================== */
+.oferta__box{width:100%;max-width:620px;
+  background:linear-gradient(180deg,rgba(200,16,46,.2),rgba(10,16,32,.86));
+  border:1px solid rgba(225,23,51,.42);border-radius:20px;
+  padding:2.2rem 1.6rem;box-shadow:0 30px 70px rgba(0,0,0,.6);
+  display:flex;flex-direction:column;align-items:center}
+.oferta__list{list-style:none;width:100%;max-width:440px;text-align:left;
+  display:flex;flex-direction:column;gap:.55rem;margin:.4rem 0 1.4rem}
+/* bloco, não flex: o texto e o complemento em <span> precisam fluir na
+   mesma linha. Como flex items eles viravam duas colunas estreitas. */
+.oferta__list li{position:relative;padding-left:1.55rem;font-size:.93rem;line-height:1.5}
+.oferta__list li::before{content:"✓";position:absolute;left:0;top:0;color:var(--green);font-weight:800}
+.oferta__list span{color:var(--muted)}
+.guarantee{display:flex;align-items:center;gap:.9rem;max-width:440px;margin-top:1.3rem;
+  background:var(--panel-2);border:1px solid var(--line);border-radius:14px;
+  padding:.95rem 1.1rem;text-align:left}
+.guarantee svg{width:34px;height:34px;flex:0 0 auto;fill:none;stroke:var(--green);
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.guarantee strong{display:block;font-size:.92rem}
+.guarantee p{color:var(--muted);font-size:.8rem}
+
+/* ===================== FORMULÁRIO (modal) ===================== */
+.form{width:100%;text-align:left}
+.field{margin-bottom:.85rem}
+.field input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);
+  border-radius:10px;color:var(--white);font-family:inherit;font-size:1rem;padding:.9rem;
+  transition:border-color .15s,box-shadow .15s}
+.field input::placeholder{color:#818aa0}
+.field input:focus{outline:none;border-color:var(--red-bright);box-shadow:0 0 0 3px rgba(225,23,51,.22)}
+.field input.is-invalid{border-color:#ff5b5b;box-shadow:0 0 0 3px rgba(255,91,91,.18)}
+.error{display:block;color:#ff8a8a;font-size:.76rem;margin-top:.3rem;min-height:1em}
+.form .cta{margin-top:.4rem}
+.note{text-align:center;font-size:.74rem;color:var(--muted);margin-top:.8rem}
+.success{margin-top:1rem;padding:.85rem;background:rgba(22,195,74,.14);
+  border:1px solid var(--green);border-radius:10px;color:#c8f5d6;
+  font-weight:600;font-size:.88rem;text-align:center}
+
+/* ===================== MODAL ===================== */
+.modal{position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;padding:1.2rem}
+.modal[hidden]{display:none}
+.modal__overlay{position:absolute;inset:0;background:rgba(4,8,18,.84);backdrop-filter:blur(4px)}
+.modal__box{position:relative;z-index:1;width:100%;max-width:440px;max-height:92vh;overflow-y:auto;
+  background:var(--panel);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-top:4px solid var(--red);border-radius:16px;
+  padding:2rem 1.6rem 1.6rem;box-shadow:0 30px 80px rgba(0,0,0,.7);
+  animation:modal-in .22s cubic-bezier(.22,1,.36,1) both}
+@keyframes modal-in{from{opacity:0;transform:translateY(14px) scale(.98)}}
+.modal__close{position:absolute;top:.7rem;right:.9rem;background:none;border:none;
+  color:var(--muted);font-size:1.8rem;line-height:1;cursor:pointer;padding:.2rem;transition:color .15s}
+.modal__close:hover{color:var(--white)}
+.modal__title{font-family:"Bebas Neue",sans-serif;font-size:1.95rem;letter-spacing:.01em;
+  text-transform:uppercase;text-align:center;margin-bottom:.3rem}
+.modal__title .hl{color:var(--red-bright)}
+.modal__sub{text-align:center;color:var(--muted);font-size:.88rem;margin-bottom:1.3rem}
+.modal__price{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;
+  background:rgba(22,195,74,.1);border:1px solid rgba(22,195,74,.3);border-radius:10px;
+  padding:.6rem .8rem;margin-bottom:1.2rem;font-size:.82rem;color:var(--muted)}
+.modal__price strong{color:#fff;font-size:1rem}
+
+/* ===================== BARRA FIXA MOBILE ===================== */
+.buybar{position:fixed;left:0;right:0;bottom:0;z-index:300;display:none;
+  align-items:center;gap:.9rem;padding:.7rem .9rem calc(.7rem + env(safe-area-inset-bottom));
+  background:rgba(8,12,24,.96);border-top:1px solid var(--line);
+  box-shadow:0 -8px 30px rgba(0,0,0,.6)}
+.buybar__price{flex:1 1 auto;line-height:1.15;text-align:left}
+.buybar__price b{display:block;font-family:"Bebas Neue",sans-serif;font-size:1.5rem;letter-spacing:.02em}
+.buybar__price span{font-size:.68rem;color:var(--muted)}
+.buybar .cta{flex:0 0 auto;width:auto;max-width:none;padding:.85rem 1.15rem;font-size:.82rem}
+
+/* ===================== RODAPÉ ===================== */
+.footer{width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
+  margin-top:1rem;border-top:1px solid var(--line);background:rgba(6,10,20,.66)}
+.footer__cta{max-width:1080px;margin:0 auto;padding:2.6rem var(--gutter) 0;text-align:center;
+  display:flex;flex-direction:column;align-items:center}
+.footer__cta h3{font-family:"Bebas Neue",sans-serif;font-weight:400;text-transform:uppercase;
+  font-size:clamp(1.6rem,4.4vw,2.2rem);line-height:1.05;margin-bottom:.5rem}
+.footer__cta h3 .hl{color:var(--red-bright)}
+.footer__cta p{color:var(--muted);font-size:.94rem;max-width:38rem;margin-bottom:1.4rem}
+.footer__inner{max-width:1080px;margin:0 auto;padding:3rem var(--gutter) 1.6rem;
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:2rem;text-align:left}
+.footer__brand{max-width:330px}
+.footer__logos{display:flex;align-items:center;gap:1.3rem;margin-bottom:1.1rem}
+.footer__cppem{height:38px;width:auto}
+.footer__pmpe{height:52px;width:auto}
+.footer__divider{width:1px;height:44px;background:var(--line)}
+.footer__quote{font-style:italic;color:var(--white);font-size:.96rem;line-height:1.5;margin-bottom:1.2rem}
+.footer__social{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem}
+.footer__social a{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+  color:var(--white);background:var(--panel-2);border:1px solid var(--line);
+  transition:color .2s,border-color .2s,transform .15s}
+.footer__social a:hover{color:var(--red-bright);border-color:rgba(225,23,51,.5);transform:translateY(-2px)}
+.footer__social a:focus-visible{outline:2px solid var(--red-bright);outline-offset:2px}
+.footer__social svg{width:18px;height:18px;fill:currentColor}
+.footer__col h4{font-family:"Bebas Neue",sans-serif;font-weight:400;font-size:1.02rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--red-bright);margin-bottom:.9rem}
+.footer__col a{display:block;color:var(--muted);text-decoration:none;font-size:.9rem;
+  padding:.28rem 0;transition:color .15s}
+.footer__col a:hover{color:var(--white)}
+.footer__col p{color:var(--muted);font-size:.86rem;margin-bottom:.5rem}
+.footer__bar{max-width:1080px;margin:0 auto;padding:1.3rem var(--gutter) 2.4rem;
+  border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.8rem;
+  font-size:.78rem;color:var(--muted)}
+.footer__bar strong{color:var(--white);font-weight:600}
+.footer__legal{max-width:1080px;margin:0 auto;padding:0 var(--gutter) 2.4rem;
+  font-size:.72rem;color:#7b839a;line-height:1.5}
+
+/* ===================== RESPONSIVO ===================== */
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;gap:1.4rem;text-align:center;padding-top:.6rem;
+    grid-template-areas:"intro" "product" "offer"}
+  .brands{justify-content:center}
+  .hero__sub{margin-left:auto;margin-right:auto}
+  .hero__bullets{max-width:24rem;margin-left:auto;margin-right:auto}
+  .hero__trust{justify-content:center}
+  .price{margin-left:auto;margin-right:auto}
+  .hero__mock{max-width:440px}
+  .mentor{grid-template-columns:1fr;gap:1.6rem}
+  .mentor__photo{max-width:340px;margin:0 auto}
+  .mentor__content{text-align:center}
+  .mentor__path,.stats{justify-content:center}
+  .footer__inner{grid-template-columns:1fr 1fr;gap:1.8rem}
+  .footer__brand{grid-column:1 / -1;max-width:none}
+  .compare-hint{display:block;margin-top:.7rem;text-align:center;
+    font-size:.78rem;font-weight:700;color:var(--red-bright);opacity:.9}
+}
+/* ===================== MOBILE — grade de 16px =====================
+   A maioria do tráfego chega por aqui. Calha de 1rem (16px) em tudo que
+   toca a borda, e nenhum alvo de toque abaixo de 44px. */
+@media (max-width:620px){
+  :root{--gutter:1rem}
+
+  body{padding-bottom:5.4rem}
+  .buybar{display:flex}
+
+  .dores__grid{grid-template-columns:1fr}
+  .brands__pmpe{height:58px}
+  .brands__cppem{height:34px}
+  /* ocupa a largura útil inteira menos as duas calhas de 16px */
+  .hero__mock{max-width:none}
+  .strip{font-size:.7rem;letter-spacing:.04em;padding:.85rem 1rem}
+  .footer__inner{grid-template-columns:1fr;padding:2.6rem var(--gutter) 1.4rem}
+  .footer__bar{justify-content:center;text-align:center;padding:1.2rem var(--gutter) 2rem}
+  .stats{gap:1.1rem}
+
+  .oferta__box{padding:1.6rem 1rem;border-radius:16px}
+  .dor{padding:1.2rem 1rem}
+  .compare th,.compare td{padding:.9rem 1rem}
+
+  /* modais: mesma calha, e a caixa cola no rodapé em telas curtas */
+  .modal,.xp{padding:1rem}
+  .modal__box,.xp__box{padding:1.75rem 1rem 1.2rem}
+
+  /* alvos de toque — o X do modal tinha ~30px, abaixo do mínimo usável */
+  .modal__close,.xp__close{top:.25rem;right:.25rem;padding:0;
+    width:44px;height:44px;min-width:44px;min-height:44px;
+    display:grid;place-items:center}
+  .buybar .cta{min-height:48px}
+  .footer__col a{padding:.5rem 0}
+  .xp__decline{padding:.65rem .5rem}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;transition:none!important}
+  .cta::after,.hero__mock,.hero__glow,.topbar__dot{animation:none}
+  .carousel{overflow-x:auto;-webkit-mask-image:none;mask-image:none}
+  .carousel__track{animation:none}
+  .modal__box{animation:none}
+}

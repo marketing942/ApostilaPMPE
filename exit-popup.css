@@ -1,0 +1,100 @@
+/* =========================================================
+   EXIT POPUP — kit portátil
+   Para adaptar a outro site, altere SOMENTE o bloco de
+   variáveis abaixo. Nenhuma outra regra precisa ser tocada.
+   ========================================================= */
+.xp{
+  --xp-accent:#E11733;                       /* cor de destaque */
+  --xp-accent-soft:rgba(225,23,51,.14);      /* fundo do selo/benefícios */
+  --xp-accent-line:rgba(225,23,51,.38);      /* borda do selo/benefícios */
+  --xp-bg:rgba(10,16,32,.92);                /* fundo da caixa */
+  --xp-text:#F5F5F5;                         /* texto principal */
+  --xp-muted:#B9C0D0;                        /* texto secundário */
+  --xp-line:rgba(255,255,255,.10);           /* bordas neutras */
+  --xp-input-bg:rgba(255,255,255,.05);       /* fundo dos inputs */
+  --xp-cta:linear-gradient(180deg,#16C34A,#0E9E39);   /* botão */
+  --xp-cta-shadow:0 12px 34px rgba(14,158,57,.4);
+  --xp-cta-text:#FFFFFF;
+  --xp-radius:16px;
+  --xp-font:"Montserrat",system-ui,sans-serif;
+  --xp-font-title:"Bebas Neue","Montserrat",sans-serif;
+  --xp-title-size:1.72rem;
+  --xp-title-spacing:.01em;
+}
+
+/* ---------- estrutura ---------- */
+.xp{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;
+  padding:1.2rem;font-family:var(--xp-font);line-height:1.6}
+.xp[hidden]{display:none}
+.xp *{box-sizing:border-box}
+.xp__overlay{position:absolute;inset:0;background:rgba(4,8,18,.82);backdrop-filter:blur(4px)}
+.xp__box{position:relative;z-index:1;width:100%;max-width:440px;max-height:92vh;overflow-y:auto;
+  background:var(--xp-bg);backdrop-filter:blur(10px);
+  border:1px solid var(--xp-line);border-top:4px solid var(--xp-accent);
+  border-radius:var(--xp-radius);padding:2rem 1.6rem 1.6rem;
+  box-shadow:0 30px 80px rgba(0,0,0,.7);color:var(--xp-text);
+  animation:xp-in .22s cubic-bezier(.22,1,.36,1) both}
+@keyframes xp-in{from{opacity:0;transform:translateY(14px) scale(.98)}}
+
+.xp__close{position:absolute;top:.7rem;right:.9rem;background:none;border:none;color:var(--xp-muted);
+  font-size:1.8rem;line-height:1;cursor:pointer;padding:.2rem;transition:color .15s}
+.xp__close:hover{color:var(--xp-text)}
+
+/* ---------- conteúdo ---------- */
+.xp__eyebrow{display:flex;align-items:center;gap:.5rem;width:fit-content;margin:0 auto 1rem;
+  font-weight:800;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--xp-accent);background:var(--xp-accent-soft);
+  border:1px solid var(--xp-accent-line);padding:.42rem .95rem;border-radius:999px}
+.xp__eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--xp-accent)}
+
+.xp__title{font-family:var(--xp-font-title);font-weight:400;text-transform:uppercase;
+  font-size:var(--xp-title-size);line-height:1.04;letter-spacing:var(--xp-title-spacing);
+  text-align:center;text-wrap:balance;margin:0 0 .3rem}
+.xp__title span{color:var(--xp-accent)}
+.xp__sub{text-align:center;color:var(--xp-muted);font-size:.9rem;margin:0 0 .9rem}
+
+.xp__benefits{list-style:none;margin:0 0 1.3rem;padding:1rem 1.1rem;
+  background:linear-gradient(180deg,var(--xp-accent-soft),rgba(0,0,0,.18));
+  border:1px solid var(--xp-accent-line);border-radius:14px}
+.xp__benefits li{display:flex;align-items:flex-start;gap:.6rem;
+  color:var(--xp-text);font-size:.92rem;line-height:1.45;text-align:left}
+.xp__benefits li+li{margin-top:.55rem}
+.xp__benefits li::before{content:"✓";color:var(--xp-accent);font-weight:800;flex:0 0 auto}
+
+/* ---------- formulário ---------- */
+.xp__form{width:100%;text-align:left}
+.xp__field{margin-bottom:.85rem}
+.xp__field input{width:100%;background:var(--xp-input-bg);border:1px solid var(--xp-line);
+  border-radius:10px;color:var(--xp-text);font-family:inherit;font-size:1rem;padding:.9rem;
+  transition:border-color .15s,box-shadow .15s}
+.xp__field input::placeholder{color:var(--xp-muted);opacity:.75}
+.xp__field input:focus{outline:none;border-color:var(--xp-accent);
+  box-shadow:0 0 0 3px var(--xp-accent-soft)}
+.xp__field input.is-invalid{border-color:#ff5b5b;box-shadow:0 0 0 3px rgba(255,91,91,.18)}
+.xp__error{display:block;color:#ff8a8a;font-size:.76rem;margin-top:.3rem;min-height:1em}
+
+.xp__cta{width:100%;margin-top:.4rem;font-family:inherit;font-weight:800;letter-spacing:.03em;
+  text-transform:uppercase;cursor:pointer;border:none;border-radius:11px;padding:1.1rem 1.4rem;
+  font-size:1rem;color:var(--xp-cta-text);background:var(--xp-cta);box-shadow:var(--xp-cta-shadow);
+  transition:transform .15s,box-shadow .2s,filter .2s}
+.xp__cta:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.xp__cta:active{transform:translateY(0)}
+.xp__cta:disabled{opacity:.7;cursor:default;transform:none}
+.xp__cta:focus-visible{outline:3px solid var(--xp-accent);outline-offset:3px}
+
+.xp__note{text-align:center;font-size:.75rem;color:var(--xp-muted);margin:.8rem 0 0}
+.xp__success{margin:1rem 0 0;padding:.85rem;background:var(--xp-accent-soft);
+  border:1px solid var(--xp-accent);border-radius:10px;color:var(--xp-text);
+  font-weight:600;font-size:.88rem;text-align:center}
+.xp__success[hidden]{display:none}
+
+.xp__decline{display:block;margin:.9rem auto 0;background:none;border:none;color:var(--xp-muted);
+  font-family:inherit;font-size:.78rem;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;transition:color .15s}
+.xp__decline:hover{color:var(--xp-text)}
+.xp__decline:focus-visible{outline:2px solid var(--xp-accent);outline-offset:3px;border-radius:4px}
+
+@media (prefers-reduced-motion:reduce){
+  .xp__box{animation:none}
+  .xp__cta{transition:none}
+}
