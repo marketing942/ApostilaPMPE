@@ -30,7 +30,11 @@ html{scroll-behavior:smooth;font-size:16px;
 body{overflow-x:hidden;background:var(--ink);color:var(--white);
   font-family:"Montserrat",system-ui,sans-serif;font-size:1rem;line-height:1.6;
   -webkit-font-smoothing:antialiased;min-height:100vh;padding-top:2.6rem}
-img{display:block;max-width:100%}
+/* height:auto é obrigatório junto com os atributos width/height do HTML.
+   Sem ele, a presentational hint do atributo trava a altura em pixels e a
+   imagem estica quando a largura encolhe. Regras mais específicas que
+   precisam de altura fixa (mentor, carrossel) continuam vencendo esta. */
+img{display:block;max-width:100%;height:auto}
 
 /* iOS dá zoom automático em qualquer campo com fonte abaixo de 16px, e o
    zoom não volta sozinho — a página fica torta no meio do formulário.
@@ -168,7 +172,7 @@ input,button,textarea,select{font-family:inherit;font-size:1rem}
   background:radial-gradient(closest-side,rgba(225,23,51,.42),transparent 72%);
   filter:blur(28px);animation:breathe 5s ease-in-out infinite}
 @keyframes breathe{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
-.hero__mock{position:relative;z-index:1;width:100%;max-width:520px;border-radius:20px;
+.hero__mock{position:relative;z-index:1;width:100%;height:auto;max-width:520px;border-radius:20px;
   border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.7);
   animation:float 6s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
