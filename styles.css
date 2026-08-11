@@ -139,7 +139,10 @@ input,button,textarea,select{font-family:inherit;font-size:1rem}
   align-items:center;padding:.8rem 0 3.2rem}
 .hero__intro{grid-area:intro;align-self:end}
 .hero__product{grid-area:product}
-.hero__offer{grid-area:offer;align-self:start}
+/* flex para o mobile poder reordenar: no celular o preço e o botão sobem
+   para logo depois da imagem, e os bullets descem. Na ordem do HTML os
+   bullets vêm primeiro, que é o que funciona no desktop. */
+.hero__offer{grid-area:offer;align-self:start;display:flex;flex-direction:column}
 
 .brands{display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem}
 .brands__pmpe{height:70px;width:auto;filter:drop-shadow(0 8px 22px rgba(0,0,0,.55))}
@@ -281,13 +284,6 @@ input,button,textarea,select{font-family:inherit;font-size:1rem}
   border:1px solid rgba(225,23,51,.42);border-radius:20px;
   padding:2.2rem 1.6rem;box-shadow:0 30px 70px rgba(0,0,0,.6);
   display:flex;flex-direction:column;align-items:center}
-.oferta__list{list-style:none;width:100%;max-width:440px;text-align:left;
-  display:flex;flex-direction:column;gap:.55rem;margin:.4rem 0 1.4rem}
-/* bloco, não flex: o texto e o complemento em <span> precisam fluir na
-   mesma linha. Como flex items eles viravam duas colunas estreitas. */
-.oferta__list li{position:relative;padding-left:1.55rem;font-size:.93rem;line-height:1.5}
-.oferta__list li::before{content:"✓";position:absolute;left:0;top:0;color:var(--green);font-weight:800}
-.oferta__list span{color:var(--muted)}
 .guarantee{display:flex;align-items:center;gap:.9rem;max-width:440px;margin-top:1.3rem;
   background:var(--panel-2);border:1px solid var(--line);border-radius:14px;
   padding:.95rem 1.1rem;text-align:left}
@@ -411,10 +407,36 @@ input,button,textarea,select{font-family:inherit;font-size:1rem}
   .buybar{display:flex}
 
   .dores__grid{grid-template-columns:1fr}
-  .brands__pmpe{height:58px}
-  .brands__cppem{height:34px}
-  /* ocupa a largura útil inteira menos as duas calhas de 16px */
-  .hero__mock{max-width:none}
+
+  /* ---- hero enxuto: produto, preço e botão na primeira tela ----
+     O topbar é fixo, então o body já reserva o espaço dele. O padding-top
+     do .page vinha somando de novo: eram 83px mortos antes da logo. */
+  .page{padding-top:.9rem}
+  .hero{gap:.8rem;padding-top:0;padding-bottom:2.4rem}
+  .brands{margin-bottom:.7rem}
+  .brands__pmpe{height:48px}
+  .brands__cppem{height:29px}
+  .brands__divider{height:34px}
+  .eyebrow{margin-bottom:.6rem;font-size:.66rem;padding:.35rem .8rem}
+  .headline{margin-bottom:.6rem}
+  .hero__sub{font-size:.95rem}
+  .hero__product{padding:.4rem 0}
+  .hero__seal{font-size:.66rem;padding:.42rem .8rem}
+
+  /* A imagem é quadrada: numa tela baixa ela sozinha comeria meio celular.
+     Limitar pela altura da viewport mantém o preço visível sem rolagem em
+     aparelhos curtos, e continua larga nos altos. */
+  .hero__mock{width:auto;max-width:100%;max-height:30vh}
+
+  /* preço e botão logo abaixo do produto; os bullets viram reforço no fim */
+  .price{order:1;margin-bottom:.7rem;padding:.9rem 1rem}
+  .price__now{font-size:2.7rem}
+  .price__tag{margin-bottom:.35rem}
+  .price__parcel{font-size:.9rem}
+  .hero__offer .cta{order:2}
+  .hero__trust{order:3;margin-top:.7rem}
+  .hero__bullets{order:4;margin:1rem 0 0;gap:.35rem;font-size:.9rem}
+
   .strip{font-size:.7rem;letter-spacing:.04em;padding:.85rem 1rem}
   .footer__inner{grid-template-columns:1fr;padding:2.6rem var(--gutter) 1.4rem}
   .footer__bar{justify-content:center;text-align:center;padding:1.2rem var(--gutter) 2rem}
