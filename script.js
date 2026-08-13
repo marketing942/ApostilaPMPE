@@ -13,7 +13,7 @@ const SHEET_URL  = `${SHEET_BASE}?aba=APOSTILA_PMPE`;
 
 /* ---------- Checkout ---------- */
 const CHECKOUT_BASE =
-  "https://checkout.cppem.com.br/pay/resumo-bizurado-digital-policia-militar-de-pernambuco-pmpe-01";
+  "https://checkout.cppem.com.br/pay/oferta-03";
 
 /* Usados só quando o visitante chega sem parâmetro nenhum
    (link direto, bio, QR code). Se ele vier de um anúncio, os
